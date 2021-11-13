@@ -148,7 +148,7 @@ control MyIngress(inout headers hdr,
         hdr.udp.checksum = hdr.udp.checksum - (bit<16>)(dstAddr - original_dstAddr);
     }
     
-    action rewrite_ipv4_src(ip4Addr_t srcAddress) {
+    action rewrite_ipv4_src(ip4Addr_t srcAddr) {
         bit<32> original_srcAddr;
 	
 	// replace src address
