@@ -4,7 +4,7 @@
 
 const bit<16> TYPE_IPV4 = 0x800;
 const bit<8>  PROTOCOL_UDP = 0x11;
-const bit<16>  MEMCACHED_REQUEST_LEN = 0x88;
+const bit<16>  MEMCACHED_REQUEST_LEN = 0x90;
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
