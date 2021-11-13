@@ -147,6 +147,17 @@ control MyIngress(inout headers hdr,
         // Correct the UDP checksum.
         hdr.udp.checksum = hdr.udp.checksum - (bit<16>)(dstAddr - original_dstAddr);
     }
+    
+    action rewrite_ipv4_src(ip4Addr_t srcAddress) {
+        bit<32> original_srcAddr;
+	
+	// replace src address
+	original_srcAddr = hdr.ipv4.srcAddr;
+	hdr.ipv4.srcAddr = srcAddr;
+
+        // Correct the UDP checksum.
+        hdr.udp.checksum = hdr.udp.checksum - (bit<16>)(srcAddr - original_srcAddr);
+    }
 
     table ipv4_lpm {
         key = {
@@ -154,6 +165,7 @@ control MyIngress(inout headers hdr,
         }
         actions = {
             ipv4_forward;
+	    rewrite_ipv4_src;
             drop;
             NoAction;
         }
