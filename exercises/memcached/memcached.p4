@@ -105,9 +105,7 @@ parser MyParser(packet_in packet,
     
     state parse_memcached_request {
         packet.extract(hdr.memcached_request);
-        transition select(hdr.memcached_request.magic) {
-            default: accept;
-        }
+        transition accept;
     }
 }
 
@@ -140,8 +138,11 @@ control MyIngress(inout headers hdr,
 
     action rewrite_ipv4_dst(ip4Addr_t dstAddr) {
         bit<32> original_dstAddr;
-
-        // TODO: Complete here
+	
+	// replace dest address
+	original_dstAddr = hdr.ipv4.dstAddr;
+	hdr.ipv4.dstAddr = dstAddr;
+	// hdr.ipv4.srcAddr remains the same 
 
         // Correct the UDP checksum.
         hdr.udp.checksum = hdr.udp.checksum - (bit<16>)(dstAddr - original_dstAddr);
@@ -159,13 +160,27 @@ control MyIngress(inout headers hdr,
         size = 1024;
         default_action = drop();
     }
+    
+    table memcached_request_exact {
+        key = {
+            hdr.memcached_request.lastDigit: exact;
+        }
+        actions = {
+            rewrite_ipv4_dst;
+            drop;
+            NoAction;
+        }
+        size = 8;
+        default_action = drop();
+    }
 
     // TODO: Add new tables here
 
     apply {
         // TODO: Need to apply other flow tables
         if (hdr.ipv4.isValid()) {
-            ipv4_lpm.apply();
+            memcached_request_exact.apply();
+	    ipv4_lpm.apply();
         }
     }
 }
