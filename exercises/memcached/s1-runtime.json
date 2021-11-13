@@ -31,6 +31,16 @@
     {
       "table": "MyIngress.ipv4_lpm",
       "match": {
+        "hdr.ipv4.dstAddr": ["10.0.1.1", 32]
+      },
+      "action_name": "MyIngress.rewrite_ipv4_src",
+      "action_params": {
+        "srcAddr": "10.0.0.1"
+      }
+    },
+    {
+      "table": "MyIngress.ipv4_lpm",
+      "match": {
         "hdr.ipv4.dstAddr": ["10.0.2.2", 32]
       },
       "action_name": "MyIngress.ipv4_forward",
