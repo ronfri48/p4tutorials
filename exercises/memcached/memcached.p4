@@ -4,6 +4,7 @@
 
 const bit<16> TYPE_IPV4 = 0x800;
 const bit<8>  PROTOCOL_UDP = 0x11;
+const bit<16>  MEMCACHED_REQUEST_LEN = 0x88;
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -34,6 +35,23 @@ header ipv4_t {
     ip4Addr_t dstAddr;
 }
 
+header udp_t {
+    bit<16> srcPort;
+    bit<16> dstPort;
+    bit<16> length_;
+    bit<16> checksum;
+}
+// The length should be - 64 + 24 + 8 + 24 + 8 + 8 = 136
+
+header memcached_request_t {
+    bit<64> magic;
+    bit<24> getAction;
+    bit<8> space_;
+    bit<24> keyKeyword;
+    bit<8> zero_;
+    bit<8> lastDigit;
+}
+
 // TODO: Add new headers here
 
 struct metadata {
@@ -41,8 +59,10 @@ struct metadata {
 }
 
 struct headers {
-    ethernet_t   ethernet;
-    ipv4_t       ipv4;
+    ethernet_t   	ethernet;
+    ipv4_t       	ipv4;
+    udp_t	 	udp;
+    memcached_request_t memcached_request;
     // TODO: Add new headers here
 }
 
@@ -70,6 +90,22 @@ parser MyParser(packet_in packet,
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
         transition select(hdr.ipv4.protocol) {
+	    PROTOCOL_UDP: parse_udp;
+            default: accept;
+        }
+    }
+    
+    state parse_udp {
+        packet.extract(hdr.udp);
+        transition select(hdr.udp.length_) {
+	    MEMCACHED_REQUEST_LEN: parse_memcached_request;
+            default: accept;
+        }
+    }
+    
+    state parse_memcached_request {
+        packet.extract(hdr.memcached_request);
+        transition select(hdr.memcached_request.magic) {
             default: accept;
         }
     }
@@ -107,8 +143,8 @@ control MyIngress(inout headers hdr,
 
         // TODO: Complete here
 
-        // TODO: Correct the UDP checksum. Use the following pseudo-code and adapt it to your implementation:
-        // hdr.udp.checksum = hdr.udp.checksum - (bit<16>)(dstAddr - original_dstAddr);
+        // Correct the UDP checksum.
+        hdr.udp.checksum = hdr.udp.checksum - (bit<16>)(dstAddr - original_dstAddr);
     }
 
     table ipv4_lpm {
@@ -176,6 +212,8 @@ control MyDeparser(packet_out packet, in headers hdr) {
     apply {
         packet.emit(hdr.ethernet);
         packet.emit(hdr.ipv4);
+	packet.emit(hdr.udp);
+	packet.emit(hdr.memcached_request);
         // TODO: Need to emit other headers
     }
 }
