@@ -12,7 +12,7 @@
     {
       "table": "MyIngress.memcached_request_exact",
       "default_action": true,
-      "action_name": "MyIngress.MyIngress.rewrite_ipv4_dst",
+      "action_name": "MyIngress.rewrite_ipv4_dst",
       "action_params": {
         "dstAddr": "10.0.2.2"
       }
