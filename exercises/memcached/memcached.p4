@@ -4,7 +4,7 @@
 
 const bit<16> TYPE_IPV4 = 0x800;
 const bit<8>  PROTOCOL_UDP = 0x11;
-const bit<16>  MEMCACHED_REQUEST_LEN = 0x90;
+const bit<16>  MEMCACHED_REQUEST_LEN = 0x168;
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -41,15 +41,16 @@ header udp_t {
     bit<16> length_;
     bit<16> checksum;
 }
-// The length should be - 64 + 24 + 8 + 24 + 8 + 8 = 136
 
 header memcached_request_t {
+    bit<216>   preMagic;
     bit<64> magic;
     bit<24> getAction;
     bit<8> space_;
     bit<24> keyKeyword;
     bit<8> zero_;
     bit<8> lastDigit;
+    bit<8> finalChar_;
 }
 
 // TODO: Add new headers here
