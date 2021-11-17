@@ -53,7 +53,7 @@
     {
       "table": "MyIngress.memcached_request_exact",
       "match": {
-        "hdr.memcached_request.lastDigit": "31"
+        "hdr.memcached_request.lastDigit": 31
       },
       "action_name": "MyIngress.rewrite_ipv4_dst",
       "action_params": {
@@ -63,7 +63,7 @@
     {
       "table": "MyIngress.memcached_request_exact",
       "match": {
-        "hdr.memcached_request.lastDigit": "33"
+        "hdr.memcached_request.lastDigit": 33
       },
       "action_name": "MyIngress.rewrite_ipv4_dst",
       "action_params": {
@@ -73,7 +73,7 @@
     {
       "table": "MyIngress.memcached_request_exact",
       "match": {
-        "hdr.memcached_request.lastDigit": "35"
+        "hdr.memcached_request.lastDigit": 35
       },
       "action_name": "MyIngress.rewrite_ipv4_dst",
       "action_params": {
@@ -83,7 +83,7 @@
     {
       "table": "MyIngress.memcached_request_exact",
       "match": {
-        "hdr.memcached_request.lastDigit": "37"
+        "hdr.memcached_request.lastDigit": 37
       },
       "action_name": "MyIngress.rewrite_ipv4_dst",
       "action_params": {
@@ -93,7 +93,7 @@
     {
       "table": "MyIngress.memcached_request_exact",
       "match": {
-        "hdr.memcached_request.lastDigit": "39"
+        "hdr.memcached_request.lastDigit": 39
       },
       "action_name": "MyIngress.rewrite_ipv4_dst",
       "action_params": {
