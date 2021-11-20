@@ -43,7 +43,10 @@ header udp_t {
 }
 
 header memcached_request_t {
-    bit<128> notNeeded;
+    bit<64> magic;
+    bit<24> getStr;
+    bit<8> space_;
+    bit<32> keyStart;
     bit<8> lastDigit;
     bit<8> finalChar_;
 }
