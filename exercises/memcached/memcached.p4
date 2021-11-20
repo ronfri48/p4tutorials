@@ -195,7 +195,7 @@ control MyIngress(inout headers hdr,
         default_action = drop();
     }
     
-    table memcached_response_exact {
+    table memcached_response_table {
         key = {
             hdr.memcached_request.wholePacket: exact;
         }
