@@ -6,8 +6,10 @@
     {
       "table": "MyIngress.ipv4_lpm",
       "default_action": true,
-      "action_name": "MyIngress.drop",
-      "action_params": { }
+      "action_name": "MyIngress.rewrite_ipv4_src",
+      "action_params": {
+        "srcAddr": "10.0.0.1"
+      }
     },
     {
       "table": "MyIngress.memcached_request_exact",
