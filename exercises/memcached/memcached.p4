@@ -197,7 +197,7 @@ control MyIngress(inout headers hdr,
     
     table memcached_response_table {
         key = {
-            hdr.memcached_request.wholePacket: exact;
+            hdr.memcached_response.wholePacket: exact;
         }
         actions = {
             rewrite_ipv4_src;
@@ -264,7 +264,7 @@ control MyDeparser(packet_out packet, in headers hdr) {
         packet.emit(hdr.ipv4);
 	packet.emit(hdr.udp);
 	packet.emit(hdr.memcached_request);
-        // TODO: Need to emit other headers
+	packet.emit(hdr.memcached_response);
     }
 }
 
