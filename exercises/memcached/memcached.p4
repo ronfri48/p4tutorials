@@ -166,7 +166,7 @@ control MyIngress(inout headers hdr,
             NoAction;
         }
         size = 1024;
-        default_action = drop();
+        // default_action = drop();
     }
     
     table memcached_request_exact {
