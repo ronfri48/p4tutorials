@@ -4,7 +4,7 @@
 
 const bit<16> TYPE_IPV4 = 0x800;
 const bit<8>  PROTOCOL_UDP = 0x11;
-const bit<16>  MEMCACHED_REQUEST_LEN = 0x35;
+const bit<16>  MEMCACHED_REQUEST_LEN = 0x1a;
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -43,12 +43,10 @@ header udp_t {
 }
 
 header memcached_request_t {
-    bit<344> notNeeded;
+    bit<128> notNeeded;
     bit<8> lastDigit;
     bit<8> finalChar_;
 }
-
-// TODO: Add new headers here
 
 struct metadata {
     /* empty */
@@ -59,7 +57,6 @@ struct headers {
     ipv4_t       	ipv4;
     udp_t	 	udp;
     memcached_request_t memcached_request;
-    // TODO: Add new headers here
 }
 
 /*************************************************************************
@@ -182,10 +179,7 @@ control MyIngress(inout headers hdr,
         default_action = drop();
     }
 
-    // TODO: Add new tables here
-
     apply {
-        // TODO: Need to apply other flow tables
         if (hdr.ipv4.isValid()) {
             memcached_request_exact.apply();
 	    ipv4_lpm.apply();
