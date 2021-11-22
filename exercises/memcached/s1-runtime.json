@@ -12,7 +12,7 @@
     {
       "table": "MyIngress.response_ipv4_lpm",
       "match": {
-        "hdr.ipv4.dstAddr": ["10.0.2.2", 32]
+        "hdr.ipv4.srcAddr": ["10.0.2.2", 32]
       },
       "action_name": "MyIngress.rewrite_ipv4_src",
       "action_params": {
@@ -22,7 +22,7 @@
     {
       "table": "MyIngress.response_ipv4_lpm",
       "match": {
-        "hdr.ipv4.dstAddr": ["10.0.3.3", 32]
+        "hdr.ipv4.srcAddr": ["10.0.3.3", 32]
       },
       "action_name": "MyIngress.rewrite_ipv4_src",
       "action_params": {
