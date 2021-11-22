@@ -11,12 +11,6 @@
     },
     {
       "table": "MyIngress.response_ipv4_lpm",
-      "default_action": true,
-      "action_name": "MyIngress.NoAction",
-      "action_params": { }
-    },
-    {
-      "table": "MyIngress.response_ipv4_lpm",
       "match": {
         "hdr.ipv4.dstAddr": ["10.0.2.2", 32]
       },
