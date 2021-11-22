@@ -60,8 +60,6 @@ struct headers {
     ipv4_t       			ipv4;
     udp_t	 			udp;
     memcached_request_t 		memcached_request;
-    memcached_response_t 		memcached_response;
-    memcached_invalid_response_t 	memcached_invalid_response;
 }
 
 
