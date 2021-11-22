@@ -10,6 +10,34 @@
       "action_params": { }
     },
     {
+      "table": "MyIngress.response_ipv4_lpm",
+      "match": {
+        "hdr.ipv4.srcAddr": ["10.0.2.2", 32]
+      },
+      "action_name": "MyIngress.rewrite_ipv4_src",
+      "action_params": {
+        "srcAddr": "10.0.0.1"
+      }
+    },
+    {
+      "table": "MyIngress.response_ipv4_lpm",
+      "match": {
+        "hdr.ipv4.srcAddr": ["10.0.3.3", 32]
+      },
+      "action_name": "MyIngress.rewrite_ipv4_src",
+      "action_params": {
+        "srcAddr": "10.0.0.1"
+      }
+    },
+    {
+      "table": "MyIngress.memcached_request_exact",
+      "default_action": true,
+      "action_name": "MyIngress.rewrite_ipv4_dst",
+      "action_params": {
+        "dstAddr": "10.0.2.2"
+      }
+    },
+    {
       "table": "MyIngress.ipv4_lpm",
       "match": {
         "hdr.ipv4.dstAddr": ["10.0.1.1", 32]
@@ -40,6 +68,56 @@
       "action_params": {
         "dstAddr": "08:00:00:00:03:00",
         "port": 3
+      }
+    },
+    {
+      "table": "MyIngress.memcached_request_exact",
+      "match": {
+        "hdr.memcached_request.lastDigit": [49]
+      },
+      "action_name": "MyIngress.rewrite_ipv4_dst",
+      "action_params": {
+        "dstAddr": "10.0.3.3"
+      }
+    },
+    {
+      "table": "MyIngress.memcached_request_exact",
+      "match": {
+        "hdr.memcached_request.lastDigit": [51]
+      },
+      "action_name": "MyIngress.rewrite_ipv4_dst",
+      "action_params": {
+        "dstAddr": "10.0.3.3"
+      }
+    },
+    {
+      "table": "MyIngress.memcached_request_exact",
+      "match": {
+        "hdr.memcached_request.lastDigit": [53]
+      },
+      "action_name": "MyIngress.rewrite_ipv4_dst",
+      "action_params": {
+        "dstAddr": "10.0.3.3"
+      }
+    },
+    {
+      "table": "MyIngress.memcached_request_exact",
+      "match": {
+        "hdr.memcached_request.lastDigit": [55]
+      },
+      "action_name": "MyIngress.rewrite_ipv4_dst",
+      "action_params": {
+        "dstAddr": "10.0.3.3"
+      }
+    },
+    {
+      "table": "MyIngress.memcached_request_exact",
+      "match": {
+        "hdr.memcached_request.lastDigit": [57]
+      },
+      "action_name": "MyIngress.rewrite_ipv4_dst",
+      "action_params": {
+        "dstAddr": "10.0.3.3"
       }
     }
   ]
