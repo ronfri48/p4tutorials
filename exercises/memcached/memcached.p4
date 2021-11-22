@@ -200,10 +200,9 @@ control MyIngress(inout headers hdr,
         if (hdr.ipv4.isValid() && hdr.memcached_request.isValid()) {
             memcached_request_exact.apply();
         }
-	if (hdr.ipv4.isValid()) {
-	    response_ipv4_lpm.apply();
-	    ipv4_lpm.apply();
-	}
+	
+	response_ipv4_lpm.apply();
+	ipv4_lpm.apply();
     }
 }
 
