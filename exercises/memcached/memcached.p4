@@ -6,6 +6,7 @@ const bit<16> TYPE_IPV4 = 0x800;
 const bit<8>  PROTOCOL_UDP = 0x11;
 const bit<16>  MEMCACHED_REQUEST_LEN = 0x1a;
 const bit<16>  MEMCACHED_RESPONSE_LEN = 0x2e;
+const bit<16> MEMCACHED_INVALID_RESPONSE_LEN = 0x15;
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -56,16 +57,21 @@ header memcached_response_t {
     bit<304> wholePacket;
 }
 
+header memcached_invalid_response_t {
+    bit<104> wholePacket;
+}
+
 struct metadata {
     /* empty */
 }
 
 struct headers {
-    ethernet_t   	ethernet;
-    ipv4_t       	ipv4;
-    udp_t	 	udp;
-    memcached_request_t memcached_request;
-    memcached_response_t memcached_response;
+    ethernet_t   			ethernet;
+    ipv4_t       			ipv4;
+    udp_t	 			udp;
+    memcached_request_t 		memcached_request;
+    memcached_response_t 		memcached_response;
+    memcached_invalid_response_t 	memcached_invalid_response;
 }
 
 
@@ -104,6 +110,7 @@ parser MyParser(packet_in packet,
         transition select(hdr.udp.length_) {
 	    MEMCACHED_REQUEST_LEN: parse_memcached_request;
 	    MEMCACHED_RESPONSE_LEN: parse_memcached_response;
+	    MEMCACHED_INVALID_RESPONSE_LEN: parse_memcached_invalid_response;
             default: accept;
         }
     }
@@ -115,6 +122,11 @@ parser MyParser(packet_in packet,
     
     state parse_memcached_response {
         packet.extract(hdr.memcached_response);
+        transition accept;
+    }
+    
+    state parse_memcached_invalid_response {
+    	packet.extract(hdr.memcached_invalid_response);
         transition accept;
     }
 }
@@ -206,6 +218,18 @@ control MyIngress(inout headers hdr,
         }
         size = 1024;
     }
+    
+    table memcached_invalid_response_table {
+        key = {
+            hdr.memcached_invalid_response.wholePacket: exact;
+        }
+        actions = {
+            rewrite_ipv4_src;
+            drop;
+            NoAction;
+        }
+        size = 1024;
+    }
 
     apply {
         if (hdr.ipv4.isValid() && hdr.memcached_request.isValid()) {
@@ -214,6 +238,10 @@ control MyIngress(inout headers hdr,
 	
 	if (hdr.ipv4.isValid() && hdr.memcached_response.isValid()) {
             memcached_response_table.apply();
+        }
+	
+	if (hdr.ipv4.isValid() && hdr.memcached_invalid_response.isValid()) {
+            memcached_invalid_response_table.apply();
         }
 	
 	ipv4_lpm.apply();
@@ -265,6 +293,7 @@ control MyDeparser(packet_out packet, in headers hdr) {
 	packet.emit(hdr.udp);
 	packet.emit(hdr.memcached_request);
 	packet.emit(hdr.memcached_response);
+	packet.emit(hdr.memcached_invalid_response);
     }
 }
 
